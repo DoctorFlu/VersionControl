@@ -25,7 +25,7 @@ public class Commit {
 	String parentSha1Hash;
 	String childSha1Hash;
 	boolean isHead;
-	public Commit(String pTree, String summary,String author, Commit parent) throws FileNotFoundException
+	public Commit(String summary,String author, Commit parent) throws IOException
 	{
 		if (parent == null)
 		{
@@ -34,7 +34,6 @@ public class Commit {
 		else
 			isHead = false;
 		child = null;
-		this.pTree = pTree;
 		this.summary = summary;
 		this.author = author;
 		this.date = getDate();
@@ -51,8 +50,8 @@ public class Commit {
 			parentSha1Hash = "test/objects/" + parent.getCommitHash();
 			setParent();
 		}
-	
-		
+		TreeObject tree = new TreeObject(getBlobTreeList());
+		clearIndex();
 		//generates the sha1 based on contents of commit
 		sha1Hash = encryptThisString(getSubsetFileContents());
 		
@@ -129,26 +128,34 @@ public class Commit {
 		return df.format(new Date());
 		
 	}
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws IOException {
 		
-		Commit c1 = new Commit ("someTree", "first commit", "JBao", null);
-		Commit c2 = new Commit ("somTree2", "WEEEEE commit", "JBao", c1);
+		Commit c1 = new Commit ("first commit", "JBao", null);
+		Commit c2 = new Commit ("WEEEEE commit", "JBao", c1);
 		System.out.println("first commit child is" + c1.childSha1Hash);
-		Commit c3 = new Commit ("someTree3", "good mesure", "JBAO", c2);
+		Commit c3 = new Commit ("good mesure", "JBAO", c2);
 		
 		
 	}
-	public static ArrayList<String> getBlobList() throws IOException {
+	public ArrayList<String> getBlobTreeList() throws IOException {
 		BufferedReader reader;
-		ArrayList<String> blobList = new ArrayList<String>();
+		ArrayList<String> blobTreeList = new ArrayList<String>();
 		reader = new BufferedReader(new FileReader("test/index.txt"));
 		String line = reader.readLine();
 		while (line != null) {
-			blobList.add(line);
+			blobTreeList.add(line);
 			line = reader.readLine();
 		}
 		reader.close();
-		return blobList;
+		if(parent != null) {
+			blobTreeList.add("tree " + parent.pTree);
+		}
+		return blobTreeList;
+	}
+	public void clearIndex() throws FileNotFoundException {
+		PrintWriter writer = new PrintWriter("test/index.txt");
+		writer.print("");
+		writer.close();
 	}
 
 }
