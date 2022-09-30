@@ -134,6 +134,7 @@ public class Commit {
 		Commit c2 = new Commit ("WEEEEE commit", "JBao", c1);
 		System.out.println("first commit child is" + c1.childSha1Hash);
 		Commit c3 = new Commit ("good mesure", "JBAO", c2);
+		Commit c4 =  new Commit("yes", "JBAO", c3);
 		
 		
 	}

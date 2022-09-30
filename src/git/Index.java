@@ -34,7 +34,7 @@ public class Index {
 		PrintWriter pw = new PrintWriter("test/Index.txt");
 		for (String listKey : blobList.keySet())
 		{
-			pw.append(listKey + " : " + blobList.get(listKey) + "\n");
+			pw.append("Blob " + listKey + " : " + blobList.get(listKey) + "\n");
 			
 		}
 		pw.close();
@@ -43,7 +43,7 @@ public class Index {
 		Blob newBlob = new Blob("test/" + fileName);
 		blobList.put(fileName, newBlob.getFileName());
 		writeIndex();
-//		
+		
 		}
 	public void remove(String fileName) throws IOException{
 

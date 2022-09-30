@@ -11,9 +11,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.zip.DeflaterOutputStream;
 
-
-
-
 public class Blob {
 
 	private String fileName;
