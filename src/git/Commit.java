@@ -1,6 +1,8 @@
 package git;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
@@ -9,6 +11,7 @@ import java.security.NoSuchAlgorithmException;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Commit {
@@ -134,6 +137,18 @@ public class Commit {
 		Commit c3 = new Commit ("someTree3", "good mesure", "JBAO", c2);
 		
 		
+	}
+	public static ArrayList<String> getBlobList() throws IOException {
+		BufferedReader reader;
+		ArrayList<String> blobList = new ArrayList<String>();
+		reader = new BufferedReader(new FileReader("test/index.txt"));
+		String line = reader.readLine();
+		while (line != null) {
+			blobList.add(line);
+			line = reader.readLine();
+		}
+		reader.close();
+		return blobList;
 	}
 
 }
