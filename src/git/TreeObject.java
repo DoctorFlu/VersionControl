@@ -1,10 +1,13 @@
 package git;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-
+import java.io.LineNumberReader;
+import java.util.*;
 public class TreeObject {
 	private HashMap<String, String> shas = new HashMap<String, String>();
 	private ArrayList<String> privStrings;
@@ -26,5 +29,23 @@ public class TreeObject {
 		FileWriter SHAFileWriter = new FileWriter (SHAFile);
 		SHAFileWriter.write(masterString);
 		SHAFileWriter.close();
+	}
+	
+	public void delete(String fileName) {
+		File file = new File("test/" + fileName);
+		file.delete();
+		replaceSelected(fileName, " *deleted* " + fileName, 4);	
+	}
+	
+	public void replaceSelected(String fileName, String newLineContent, int lineToBeEdited) {
+		ChangeLineInFile changeFile = new ChangeLineInFile();
+	    changeFile.changeALineInATextFile(fileName, newLineContent, lineToBeEdited);
+	}
+	public void getStringLine(String fileName, String line) throws IOException {
+		LineNumberReader reader = new LineNumberReader(new FileReader(fileName));
+		reader.setLineNumber(0);
+		while((line = LineNumberReader.readLine() != line)) {
+			
+		}
 	}
 }
