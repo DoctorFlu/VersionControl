@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
@@ -26,6 +27,8 @@ public class Commit {
 	String parentSha1Hash;
 	String childSha1Hash;
 	boolean isHead;
+	ArrayList<String> list = new ArrayList<String>();
+	File HEAD = new File("test/HEAD");
 	public Commit(String summary,String author, Commit parent) throws IOException
 	{
 		if (parent == null)
@@ -58,8 +61,47 @@ public class Commit {
 		
 		
 		writeCommitFile();
+		//look through index for deleted/edited and store in arraylist
+		File index = new File ("test/index");
+		BufferedReader br = new BufferedReader(new FileReader(index)); 
+		ArrayList <String> toDelete = new ArrayList <String> ();
+		String line = br.readLine();
+		String hasDeleted = "false";
+		while (line != null) {
+			if (line.contains("*deleted*")) {
+				toDelete.add(line.substring(10));
+				hasDeleted = "true";
+			}
+			else if (line.contains("*edited*")) {
+				toDelete.add(line.substring(9));
+				hasDeleted = "true";
+			}
+			else {
+				list.add(line);
+			}
+			line = br.readLine();
+		}
 		
+		//add parent tree or delete files
+		if (hasDeleted.equals("false")) {
+			this.addParent();
+		}
+		else {
+			File treeF = new File ("test/" + pTree);
+			this.delete(toDelete, treeF);
+		}
+
+		TreeObject tree1 = new TreeObject (list);
+		//write to the current file: 
+		writeToFile();
+		FileWriter wr = new FileWriter(HEAD);
+		wr.flush();
+		wr.append("Test/Objects/" + this.getCommitHash ());
+		wr.close();
+		FileWriter writer = new FileWriter(index);
+		writer.flush();
 	}
+
 	
 	public String getSubsetFileContents()
 	{
@@ -96,13 +138,10 @@ public class Commit {
 	
 	}
 	
-	private void setChild (Commit child) {
+	public void setChild (Commit child) {
 		this.child = child;
 	//	System.out.println("i ran");
 	}
-	
-	
-	
 	
 	//sha 1 creator
 	public static String encryptThisString(String input)
@@ -154,9 +193,75 @@ public class Commit {
 		}
 		return blobTreeList;
 	}
+	
 	public void clearIndex() throws FileNotFoundException {
 		PrintWriter writer = new PrintWriter("test/index.txt");
 		writer.print("");
 		writer.close();
 	}
+	
+	public void delete (ArrayList<String> list, File tree) throws IOException {
+		String pTree = "";
+		BufferedReader reader = new BufferedReader(new FileReader(tree));
+		String line = reader.readLine();
+		while (line != null) {
+			if (line.contains("tree : ")) {
+				pTree = line;
+			} else if (list.size() == 0) {
+				list.add(line);
+			} else {
+				boolean notFound = true;
+				for (int i = 0; i < list.size(); i++) {
+					if (line.substring(48).equals(list.get(i))) {
+						list.remove(i);
+						i--;
+						notFound = false;
+					}
+				}
+				if (notFound == true) {
+					list.add(line);
+				}
+			}
+			line = reader.readLine();
+		}
+		if (!list.isEmpty()) {
+			File newF = new File ("Test/objects/" + pTree.substring(7));
+			this.delete(list, newF);
+		}
+		else {
+			list.add(pTree);
+		}
+	}
+	
+	private void addParent () throws IOException {
+		if (parent != null) {
+//			System.out.println ("got here");
+			File parentF = new File ("Test/Objects/"+ parent);
+//			System.out.println (parent);
+			BufferedReader br = new BufferedReader(new FileReader(parentF)); 
+			String line = br.readLine();
+			br.close ();
+			
+			list.add("tree : " + line.substring(8));
+		}
+		
+	}
+	private File writeToFile() throws IOException {
+		File f = new File("test/objects/" + parentSha1Hash);
+		FileWriter writer = new FileWriter(f);
+		writer.append("objects/" + pTree + "\n");
+		if (parent!=null) {
+			writer.append("objects/" + parent + "\n");	
+		}
+		else {
+			writer.append("\n");
+		}
+		writer.append("\n");//every added one has no child yet 
+		writer.append(author + "\n");
+		writer.append(date + "\n");
+		writer.append(summary);
+		writer.close();
+		return f;
+	}
+
 }

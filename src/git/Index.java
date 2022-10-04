@@ -57,11 +57,11 @@ public class Index {
 	}
 
 	public void delete(String fileName) throws IOException {
-		replaceSelected(fileName, " *deleted* " + fileName, getStringLine("test/index.txt", fileName));	
+		replaceSelected(fileName, " *deleted* " + fileName, getStringLine("test/Index.txt", fileName));	
 	}
 	
 	public void edit(String fileName) throws IOException {
-		replaceSelected(fileName, " *edited* " + fileName, getStringLine("test/index.txt", fileName));
+		replaceSelected(fileName, " *edited* " + fileName, getStringLine("test/Index.txt", fileName));
 	}
 	
 	public int getStringLine(String fileName, String line) throws IOException {

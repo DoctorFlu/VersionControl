@@ -1,5 +1,4 @@
 package git;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -29,26 +28,5 @@ public class TreeObject {
 		FileWriter SHAFileWriter = new FileWriter (SHAFile);
 		SHAFileWriter.write(masterString);
 		SHAFileWriter.close();
-	}
-	
-	public void delete(String fileName) throws IOException {
-		File file = new File("test/" + fileName);
-		file.delete();
-		replaceSelected(fileName, " *deleted* " + fileName, getStringLine("test/index.txt", fileName));	
-	}
-	
-	public void replaceSelected(String fileName, String newLineContent, int lineToBeEdited) {
-		ChangeLineInFile changeFile = new ChangeLineInFile();
-	    changeFile.changeALineInATextFile(fileName, newLineContent, lineToBeEdited);
-	}
-	
-	public int getStringLine(String fileName, String line) throws IOException {
-		LineNumberReader reader = new LineNumberReader(new FileReader(fileName));
-		int num = 0;
-		reader.setLineNumber(num);
-		while((reader.readLine() != line)) {
-			num++;
-		}
-		return reader.getLineNumber();
 	}
 }
