@@ -31,21 +31,24 @@ public class TreeObject {
 		SHAFileWriter.close();
 	}
 	
-	public void delete(String fileName) {
+	public void delete(String fileName) throws IOException {
 		File file = new File("test/" + fileName);
 		file.delete();
-		replaceSelected(fileName, " *deleted* " + fileName, 4);	
+		replaceSelected(fileName, " *deleted* " + fileName, getStringLine("test/index.txt", fileName));	
 	}
 	
 	public void replaceSelected(String fileName, String newLineContent, int lineToBeEdited) {
 		ChangeLineInFile changeFile = new ChangeLineInFile();
 	    changeFile.changeALineInATextFile(fileName, newLineContent, lineToBeEdited);
 	}
-	public void getStringLine(String fileName, String line) throws IOException {
+	
+	public int getStringLine(String fileName, String line) throws IOException {
 		LineNumberReader reader = new LineNumberReader(new FileReader(fileName));
-		reader.setLineNumber(0);
-		while((line = LineNumberReader.readLine() != line)) {
-			
+		int num = 0;
+		reader.setLineNumber(num);
+		while((reader.readLine() != line)) {
+			num++;
 		}
+		return reader.getLineNumber();
 	}
 }
