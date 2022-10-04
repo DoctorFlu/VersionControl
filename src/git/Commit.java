@@ -56,12 +56,10 @@ public class Commit {
 		}
 		TreeObject tree = new TreeObject(getBlobTreeList());
 		clearIndex();
-		//generates the sha1 based on contents of commit
 		sha1Hash = encryptThisString(getSubsetFileContents());
 		
 		
 		writeCommitFile();
-		//look through index for deleted/edited and store in arraylist
 		File index = new File ("test/index");
 		BufferedReader br = new BufferedReader(new FileReader(index)); 
 		ArrayList <String> toDelete = new ArrayList <String> ();
@@ -82,7 +80,6 @@ public class Commit {
 			line = br.readLine();
 		}
 		
-		//add parent tree or delete files
 		if (hasDeleted.equals("false")) {
 			this.addParent();
 		}
@@ -143,7 +140,6 @@ public class Commit {
 	//	System.out.println("i ran");
 	}
 	
-	//sha 1 creator
 	public static String encryptThisString(String input)
 	{
 		try {	         
@@ -156,7 +152,6 @@ public class Commit {
 			}	       
 			return hashtext;
 		}	 
-		// For specifying wrong message digest algorithms
 		catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
 		}
@@ -235,9 +230,7 @@ public class Commit {
 	
 	private void addParent () throws IOException {
 		if (parent != null) {
-//			System.out.println ("got here");
 			File parentF = new File ("Test/Objects/"+ parent);
-//			System.out.println (parent);
 			BufferedReader br = new BufferedReader(new FileReader(parentF)); 
 			String line = br.readLine();
 			br.close ();
@@ -256,7 +249,7 @@ public class Commit {
 		else {
 			writer.append("\n");
 		}
-		writer.append("\n");//every added one has no child yet 
+		writer.append("\n");
 		writer.append(author + "\n");
 		writer.append(date + "\n");
 		writer.append(summary);
