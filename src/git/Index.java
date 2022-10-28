@@ -2,7 +2,9 @@ package git;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.util.HashMap;
 
@@ -54,7 +56,28 @@ public class Index {
 		
 	}
 
+	public void delete(String fileName) throws IOException {
+		replaceSelected(fileName, " *deleted* " + fileName, getStringLine("test/Index.txt", fileName));	
+	}
 	
+	public void edit(String fileName) throws IOException {
+		replaceSelected(fileName, " *edited* " + fileName, getStringLine("test/Index.txt", fileName));
+	}
 	
+	public int getStringLine(String fileName, String line) throws IOException {
+		LineNumberReader reader = new LineNumberReader(new FileReader(fileName));
+		int num = 0;
+		reader.setLineNumber(num);
+		while((reader.readLine() != line)) {
+			num++;
+		}
+		reader.close();
+		return reader.getLineNumber();
+	}
+	
+	public void replaceSelected(String fileName, String newLineContent, int lineToBeEdited) {
+		ChangeLineInFile changeFile = new ChangeLineInFile();
+	    changeFile.changeALineInATextFile(fileName, newLineContent, lineToBeEdited);
+	}
 	
 }
