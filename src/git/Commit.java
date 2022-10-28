@@ -29,11 +29,7 @@ public class Commit {
 	boolean isHead;
 	ArrayList<String> list = new ArrayList<String>();
 	File HEAD = new File("test/HEAD");
-<<<<<<< HEAD
 	public Commit(String summary,String author, String parentHash) throws IOException
-=======
-	public Commit(String summary,String author, Commit parent) throws IOException
->>>>>>> main
 	{
 		sha1Hash = encryptThisString(getSubsetFileContents());
 		parentSha1Hash = parentHash;
@@ -49,24 +45,13 @@ public class Commit {
 		this.date = getDate();
 		TreeObject tree = new TreeObject(getBlobTreeList());
 		clearIndex();
-<<<<<<< HEAD
-		
-		
-		writeCommitFile();
-		File index = new File ("test/Index.txt");
-=======
-		sha1Hash = encryptThisString(getSubsetFileContents());
-		
 		
 		writeCommitFile();
 		File index = new File ("test/index");
->>>>>>> main
 		BufferedReader br = new BufferedReader(new FileReader(index)); 
 		ArrayList <String> toDelete = new ArrayList <String> ();
 		String line = br.readLine();
 		String hasDeleted = "false";
-<<<<<<< HEAD
-=======
 		while (line != null) {
 			if (line.contains("*deleted*")) {
 				toDelete.add(line.substring(10));
@@ -81,7 +66,6 @@ public class Commit {
 			}
 			line = br.readLine();
 		}
->>>>>>> main
 		
 		if (hasDeleted.equals("false")) {
 			this.addParent();
@@ -144,7 +128,6 @@ public class Commit {
 ////			parent.writeCommitFile();
 //	}
 	
-<<<<<<< HEAD
 	public void setChild (String child1Hash) throws FileNotFoundException {
 		childSha1Hash = child1Hash;
 		PrintWriter pw = new PrintWriter("test/objects/" + sha1Hash + "\n");
@@ -159,12 +142,10 @@ public class Commit {
 		pw.append(summary + "\n");
 		pw.close();
 //		System.out.println(childSha1Hash);
-=======
 	}
 	
 	public void setChild (Commit child) {
 		this.child = child;
->>>>>>> main
 	//	System.out.println("i ran");
 	}
 	
